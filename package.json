@@ -26,6 +26,8 @@
     "@types/express": "^5.0.1",
     "@types/express-session": "^1.18.1",
     "@types/node": "^22.14.0",
+    "@types/passport": "^1.0.17",
+    "@types/passport-local": "^1.0.38",
     "eslint": "^9.24.0",
     "eslint-config-prettier": "^10.1.1",
     "globals": "^16.0.0",
