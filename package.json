@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsx watch src/app.ts",
+    "dev": "tsx watch src/app.ts",
+    "start": "node dist/app.js",
+    "build": "npx tsc && postcss src/styles/styles.css -o public/styles/styles.css",
     "watch:css": "postcss src/styles/styles.css -o public/styles/styles.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,6 +23,8 @@
   },
   "homepage": "https://github.com/Gulcan00/file-uploader#readme",
   "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/express-session": "^1.18.1",
     "@types/node": "^22.14.0",
     "eslint": "^9.24.0",
     "eslint-config-prettier": "^10.1.1",
