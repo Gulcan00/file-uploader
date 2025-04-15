@@ -4,6 +4,7 @@ import path from 'path';
 import session from 'express-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import  { PrismaClient } from '@prisma/client';
+import authRouter from './routes/authRouter.js';
 
 const __dirname = path.resolve();
 const app = express();
@@ -32,6 +33,8 @@ app.use(
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
+
+app.use('/', authRouter);
 
 
 const port = process.env.PORT || 3000;
