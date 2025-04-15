@@ -7,7 +7,7 @@
     "dev": "tsx watch src/app.ts",
     "start": "node dist/app.js",
     "build": "npx tsc && postcss src/styles/styles.css -o public/styles/styles.css",
-    "watch:css": "postcss src/styles/styles.css -o public/styles/styles.css",
+    "watch:css": "postcss src/styles/styles.css -o public/styles/styles.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -40,6 +40,7 @@
     "@prisma/client": "^6.5.0",
     "@quixo3/prisma-session-store": "^3.1.13",
     "@tailwindcss/postcss": "^4.1.3",
+    "autoprefixer": "^10.4.21",
     "bcryptjs": "^3.0.2",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",

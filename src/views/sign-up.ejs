@@ -4,18 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
+    <link rel="stylesheet" href="/styles/styles.css">
 </head>
 <body>
-    <form action="/sign-up" method="post">
-        <div>
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username">
-        </div>
-        <div>
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" autocomplete="new-password">
-        </div>
-        <button type="submit">Sign up</button>
-    </form>
+    <div class="flex h-full justify-center items-center">
+        <form action="/sign-up" method="post" class="space-y-6 w-full max-w-md">
+            <div>
+                <label for="username" class="form-label">Username</label>
+                <div class="mt-2"><input type="text" id="username" name="username" class="form-input"></div>
+            </div>
+            <div>
+                <label for="password" class="form-label">Password</label>
+                <div class="mt-2"><input type="password" id="password" name="password" autocomplete="new-password" class="form-input"></div>
+            </div>
+            <button type="submit" class="primary-btn">Sign up</button>
+        </form>
+    </div>
 </body>
 </html>
