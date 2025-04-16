@@ -71,6 +71,7 @@ export const signUpPost = [
             if (user) {
                 return res.render('sign-up', {
                     username,
+                    password,
                     errors: { username: { msg: `Username already taken`}}
                 });
             }
@@ -80,6 +81,11 @@ export const signUpPost = [
                 data: {
                     username,
                     password: hashedPassword,
+                    folders: {
+                        create: {
+                            name: username
+                        }
+                    }
                 }
             })
             .then(() => res.redirect('/log-in'))
@@ -93,7 +99,10 @@ export function logInGet(req: Request, res: Response) {
     if (req.session.messages?.length > 0) {
         const msg = req.session.messages[0];
         req.session.messages = [];
+        const { username, password } = req.body;
         return res.render('log-in', {
+            username,
+            password,
             errors: { password: { msg }}
         });
     }
@@ -104,11 +113,9 @@ export const logInPost = [
     body('username').trim().not().isEmpty().withMessage('Username is required'),
     async (req: Request, res: Response, next: NextFunction) => {
         const errors = validationResult(req);
-        const { username } = req.body;
 
         if (!errors.isEmpty()) {
             return res.render('log-in', {
-                username,
                 errors: errors.mapped()
             });
         }
