@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Files</title>
+</head>
+<body>
+    <div class="relative overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-500">
+            <thead class="text-xs text-gray-900">
+                <tr>
+                    <th class="px-6 py-3">Name</th>
+                    <th class="px-6 py-3">Last modified</th>
+                    <th class="px-6 py-3">File size</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(let item of items) { %>
+                    <tr>
+                        <td class="px-6 py-4"><%= item.name %></td>
+                        <td class="px-6 py-4"><%= item.updatedAt || item.createdAt %></td>
+                        <td class="px-6 py-4"><%= item.size || '-' %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

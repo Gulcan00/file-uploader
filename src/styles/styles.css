@@ -5,7 +5,7 @@ html {
 }
 
 body {
-    @apply p-0 m-0 bg-white h-full;
+    @apply p-0 m-0 bg-white h-full font-sans;
 }
 
 .form-input {

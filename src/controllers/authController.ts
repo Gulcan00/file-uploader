@@ -125,6 +125,6 @@ export const logInPost = [
     passport.authenticate('local', {
         failureRedirect: '/log-in',
         failureMessage: 'Incorrect username or password',
-        successRedirect: '/'
+        successRedirect: '/folders'
     })
 ]

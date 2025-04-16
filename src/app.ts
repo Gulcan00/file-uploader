@@ -5,6 +5,9 @@ import session from 'express-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import  { PrismaClient } from '@prisma/client';
 import authRouter from './routes/authRouter.js';
+import folderRouter from './routes/folderRouter.js';
+import { isAuth } from './middleware/index.js';
+import passport from 'passport';
 
 const __dirname = path.resolve();
 const app = express();
@@ -30,11 +33,15 @@ app.use(
         )
     })
 );
+app.use(passport.session());
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
 app.use('/', authRouter);
+
+app.use(isAuth);
+app.use('/folders', folderRouter);
 
 
 const port = process.env.PORT || 3000;
