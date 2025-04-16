@@ -3,11 +3,12 @@ import express, { ErrorRequestHandler } from 'express';
 import path from 'path';
 import session from 'express-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
+import passport from 'passport';
 import  { PrismaClient } from '@prisma/client';
 import authRouter from './routes/authRouter.js';
 import folderRouter from './routes/folderRouter.js';
 import { isAuth } from './middleware/index.js';
-import passport from 'passport';
+import fileRouter from './routes/fileRouter.js';
 
 const __dirname = path.resolve();
 const app = express();
@@ -42,9 +43,13 @@ app.use('/', authRouter);
 
 app.use(isAuth);
 app.use('/folders', folderRouter);
+app.use('/files', fileRouter);
 
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     return console.log(`Express is listening at http://localhost:${port}`);
-})
+});
+
+
+//TODO general error handling
