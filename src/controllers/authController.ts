@@ -90,6 +90,13 @@ export const signUpPost = [
 ];
 
 export function logInGet(req: Request, res: Response) {
+    if (req.session.messages?.length > 0) {
+        const msg = req.session.messages[0];
+        req.session.messages = [];
+        return res.render('log-in', {
+            errors: { password: { msg }}
+        });
+    }
     return res.render('log-in');
 }
 
@@ -97,7 +104,7 @@ export const logInPost = [
     body('username').trim().not().isEmpty().withMessage('Username is required'),
     async (req: Request, res: Response, next: NextFunction) => {
         const errors = validationResult(req);
-        const { username, password } = req.body;
+        const { username } = req.body;
 
         if (!errors.isEmpty()) {
             return res.render('log-in', {
@@ -110,6 +117,7 @@ export const logInPost = [
     },
     passport.authenticate('local', {
         failureRedirect: '/log-in',
+        failureMessage: 'Incorrect username or password',
         successRedirect: '/'
     })
 ]

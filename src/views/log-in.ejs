@@ -8,17 +8,41 @@
 </head>
 <body>
     <div class="flex h-full justify-center items-center">
-        <form action="/log-in" method="post" class="space-y-6 w-full max-w-md">
-            <div>
-                <label for="username" class="form-label">Username</label>
-                <input type="text" id="username" name="username" class="form-input">
-            </div>
-            <div>
-                <label for="password" class="form-label">Password</label>
-                <input type="password" id="password" name="password" autocomplete="current-password" class="form-input">
-            </div>
-            <button type="submit" class="primary-btn">Log in</button>
-        </form>
+        <div class="p-6 space-y-4 md:space-y-6 sm:p-8 w-full sm:max-w-md">
+            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
+                Sign in to your account
+            </h1>
+            <form action="/log-in" method="post" class="space-y-6">
+                <div>
+                    <label for="username" class="form-label">Username</label>
+                    <div class="mt-2"><input type="text" id="username" name="username" class="<%=`form-input  ${locals?.errors ? 'invalid' : ''}`%>" required></div>
+                    <% if (locals?.errors) { %>
+                        <p class="text-sm/6 text-red-600 flex items-start gap-x-1 mt-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-[1lh] flex-none">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
+                          </svg>
+                          <%= errors?.username?.msg || errors?.password?.msg %>
+                        </p>
+                    <% } %>
+                </div>
+                <div>
+                    <label for="password" class="form-label">Password</label>
+                    <div class="mt-2"><input type="password" id="password" name="password" autocomplete="current-password" class="<%=`form-input  ${locals?.errors?.password ? 'invalid' : ''}`%>" required></div>
+                    <% if (locals?.errors?.password) { %>
+                        <p class="text-sm/6 text-red-600 flex items-start gap-x-1 mt-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-[1lh] flex-none">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
+                          </svg>
+                          <%= errors.password.msg %>
+                        </p>
+                    <% } %>
+                </div>
+                <button type="submit" class="primary-btn">Log in</button>
+                <p class="text-sm font-light text-gray-500">
+                    Don’t have an account yet? <a href="/sign-up" class="font-medium text-sky-600 hover:underline">Sign up</a>
+                </p>
+            </form>
+        </div>
     </div>
 </body>
 </html>
