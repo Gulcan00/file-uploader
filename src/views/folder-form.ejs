@@ -13,10 +13,10 @@
                 <h1 class="text-xl font-semibold leading-tight tracking-tight text-gray-900 md:text-2xl">
                     New folder
                 </h1>
-                <form action=<%= id ? "/folders/create/" + id : "/folders/create" %> method="post" class="space-y-4 md:space-y-6">
+                <form action=<%= url %> method="post" class="space-y-4 md:space-y-6">
                     <div>
                         <label for="name" class="form-label">Name</label>
-                        <div class="mt-2"><input type="text" id="name" name="name" class="<%=`form-input  ${locals?.errors ? 'invalid' : ''}`%>" required></div>
+                        <div class="mt-2"><input type="text" id="name" name="name" class="<%=`form-input  ${locals?.errors ? 'invalid' : ''}`%>" required value="<%= locals.name ? name : '' %>"></div>
                         <% if (locals?.errors) { %>
                             <p class="text-sm/6 text-red-600 flex items-start gap-x-1 mt-2">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-[1lh] flex-none">
@@ -28,7 +28,7 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <a href="/">Cancel</a>
-                        <button type="submit" class="primary-btn">Create</button>
+                        <button type="submit" class="primary-btn"><%= locals.name ? "Update" : "Create" %></button>
                     </div>
                 </form>
             </div>
