@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Folder</title>
+    <link rel="stylesheet" href="/styles/styles.css">
+</head>
+<body class="bg-gray-100">
+    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <div class="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md">
+            <div class="p-6 space-y-4 md:space-y-6 sm:p-8 w-full sm:max-w-md">
+                <h1 class="text-xl font-semibold leading-tight tracking-tight text-gray-900 md:text-2xl">
+                    New folder
+                </h1>
+                <form action=<%= id ? "/folders/create/" + id : "/folders/create" %> method="post" class="space-y-4 md:space-y-6">
+                    <div>
+                        <label for="name" class="form-label">Name</label>
+                        <div class="mt-2"><input type="text" id="name" name="name" class="<%=`form-input  ${locals?.errors ? 'invalid' : ''}`%>" required></div>
+                        <% if (locals?.errors) { %>
+                            <p class="text-sm/6 text-red-600 flex items-start gap-x-1 mt-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-[1lh] flex-none">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
+                            </svg>
+                            <%= errors?.name?.msg %>
+                            </p>
+                        <% } %>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <a href="/">Cancel</a>
+                        <button type="submit" class="primary-btn">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

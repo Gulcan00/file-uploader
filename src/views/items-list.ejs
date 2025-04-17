@@ -55,7 +55,7 @@
                     <tr>
                         <td class="px-6 py-4 text-gray-900 font-semibold"><%= item.name %></td>
                         <td class="px-6 py-4"><%= item.updatedAt?.toLocaleDateString("en-GB", {day: "numeric", month: "short", year: "numeric"}) || item.createdAt?.toLocaleDateString("en-GB", {day: "numeric", month: "short", year: "numeric"}) %></td>
-                        <td class="px-6 py-4"><%= item.size || '-' %></td>
+                        <td class="px-6 py-4"><%= item.size || '--' %></td>
                     </tr>
                 <% } %>
             </tbody>
