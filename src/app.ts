@@ -42,6 +42,9 @@ app.set('views', path.join(__dirname, 'src/views'));
 app.use('/', authRouter);
 
 app.use(isAuth);
+app.get('/', (req, res) => {
+    res.redirect('/folders');
+})
 app.use('/folders', folderRouter);
 app.use('/files', fileRouter);
 

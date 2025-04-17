@@ -8,7 +8,19 @@ export const getAllItems = [
     async function (req: Request, res: Response) {
         const user = (req.user as User);
         const id = Number(req.params.id);
-        let folder;
+        const rootFolder = await prismaClient.folder.findFirst({
+            where: {
+                name: user.username,
+                parentId: null
+            },
+            include: {
+                files: true,
+                childFolders: true
+            }
+        });
+
+        let folder = rootFolder;
+        let currentFolder;
         if (id) {
             folder = await prismaClient.folder.findUnique({
                 where: {
@@ -16,18 +28,15 @@ export const getAllItems = [
                 },
                 include: {
                     files: true,
-                    childFolders: true
+                    childFolders: true,
                 }
-            })
-        } else {
-            folder = await prismaClient.folder.findFirst({
+            });
+            currentFolder = await prismaClient.folder.findUnique({
                 where: {
-                    name: user.username,
-                    parentId: null
+                    id,
                 },
                 include: {
-                    files: true,
-                    childFolders: true
+                    parentFolder: true
                 }
             });
         }
@@ -37,30 +46,66 @@ export const getAllItems = [
             ...(folder?.childFolders ? folder.childFolders : [])
         ];
 
+        const breadCrumbs = [];
+        while (currentFolder) {
+            breadCrumbs.unshift(currentFolder);
+            currentFolder = currentFolder.parentId ? await prismaClient.folder.findUnique({
+                where: {
+                    id: currentFolder.parentId,
+                    NOT: {
+                        parentId: null
+                    }
+                },
+                include: {
+                    parentFolder: true
+                }
+            }) : null;
+        }
         res.render('items-list', {
-            items
+            breadCrumbs,
+            items,
+            id
         });
     }
 ];
 
 export function createFolderGet(req: Request, res: Response) {
-    res.render('folder-form');
+    res.render('folder-form', {
+        id: req.params.id
+    });
 }
 
 export const createFolderPost = [
     body('name').trim().not().isEmpty().withMessage('Name is required'),
-    function (req: Request, res: Response, next: NextFunction) {
+    async function (req: Request, res: Response, next: NextFunction) {
         const errors = validationResult(req);
         const user = (req.user as User);
 
         if (!errors.isEmpty()) {
-            return res.render('folder-form');
+            return res.render('folder-form', {
+                errors: errors.mapped()
+            });
+        }
+
+        let parentId;
+
+        if (req.params.id) {
+            parentId = Number(req.params.id);
+        } else {
+            const rootFolder = await prismaClient.folder.findFirst({
+                where: {
+                    name: user.username,
+                    parentId: null
+                }
+            });
+            parentId = rootFolder?.id;
         }
 
         prismaClient.folder.create({
             data: {
                 name: req.body.name,
-                userId: user.id
+                userId: user.id,
+                parentId
             }
         })
         .then(() => res.redirect('/'))
