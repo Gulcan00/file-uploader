@@ -47,6 +47,12 @@ app.get('/', (req, res) => {
 })
 app.use('/folders', folderRouter);
 app.use('/files', fileRouter);
+app.use('/{*any}', (req, res) => {
+    res.render('error', {
+        status: 404,
+        message: 'Sorry, we couldn\'t find the page you\'re looking for.'
+    });
+});
 
 
 const port = process.env.PORT || 3000;
@@ -55,4 +61,11 @@ app.listen(port, () => {
 });
 
 
-//TODO general error handling
+// Error Handling
+app.use(((err, req, res, next) => {
+    const status = err.status || 500;
+    res.status(status).render('error', { 
+        status,
+        message: err.message 
+    });
+  }) as ErrorRequestHandler);
