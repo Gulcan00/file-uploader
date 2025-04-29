@@ -1,23 +1,28 @@
 import { NextFunction, Request, Response } from 'express';
 import { param, body, validationResult } from 'express-validator';
+import multer from 'multer';
+import * as fs from 'fs';
+import { v2 as cloudinary } from 'cloudinary'
 import prismaClient from "../prismaClient.js";
 import { User } from '@prisma/client';
+
+const upload = multer({ dest: 'uploads/' });
+cloudinary.config({
+    api_key: process.env.CLOUDINARY_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET,
+    cloud_name: process.env.CLOUDINARY_NAME
+});
 
 export function createFileGet(req: Request, res: Response) {
     res.render('file-form');
 }
 
 export const createFilePost = [
-    body('name').trim().not().isEmpty().withMessage('Name is required'),
+    upload.single('file'),
     async function (req: Request, res: Response, next: NextFunction) {
         const user = (req.user as User);
-        const errors = validationResult(req);
         let folderId;
 
-        if (!errors.isEmpty()) {
-            return res.render('file-form');
-        }
-        
         if (req.params.id) {
             folderId = Number(req.params.id);
         } else {
@@ -31,16 +36,34 @@ export const createFilePost = [
         }
 
         if (!folderId) {
-            next(new Error('Root folder not found'));
+            return next(new Error('Root folder not found'));
         } else {
-            prismaClient.file.create({
-                data: {
-                    name: req.body.name,
-                    folderId
-                }
-            })
-            .then(() => res.redirect('/'))
-            .catch(next);
+            if (!req.file) {
+                return next(new Error('No file uploaded'));
+            }
+
+            try {
+                const localPath = req.file?.path;
+                const [{nextval}] = await prismaClient.$queryRaw<{ nextval: bigint }[]>`SELECT nextval('files_id_seq')`;
+                const fileId = Number(nextval);
+                await cloudinary.uploader.upload(localPath, {
+                    public_id: fileId.toString()
+                });
+                
+                prismaClient.file.create({
+                    data: {
+                        id: fileId,
+                        name: req.file?.originalname,
+                        size: req.file?.size,
+                        folderId
+                    }
+                })
+                .then(() => res.redirect('/'))
+                .catch(next)
+                .finally(() => fs.unlinkSync(localPath));
+            } catch (err) {
+                next(err);
+            }
         }
     }
 ];
@@ -52,8 +75,9 @@ export async function updateFileGet(req: Request, res: Response) {
             id
         }
     });
-    res.render('file-form', {
-        name: file?.name
+    res.render('name-form', {
+        name: file?.name,
+        url: 'files/update/' + id
     })
 }
 
@@ -77,8 +101,10 @@ export const updateFilePost = [
     }
 ];
 
-export function deleteFile(req: Request, res: Response, next: NextFunction) {
+export async function deleteFile(req: Request, res: Response, next: NextFunction) {
     const id = Number(req.params.id);
+    try {
+    await cloudinary.uploader.destroy(id.toString());
     prismaClient.file.delete({
         where: {
             id
@@ -86,4 +112,7 @@ export function deleteFile(req: Request, res: Response, next: NextFunction) {
     })
     .then(() => res.redirect('/'))
     .catch(next);
+    } catch (err) {
+        next(err);
+    }
 }
