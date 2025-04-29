@@ -71,7 +71,7 @@ export const getAllItems = [
 
 export function createFolderGet(req: Request, res: Response) {
     const id = Number(req.params.id);
-    res.render('folder-form', {
+    res.render('name-form', {
         id,
         url: `/folders/create/${id ? id : ''}`
     });
@@ -84,7 +84,7 @@ export const createFolderPost = [
         const user = (req.user as User);
 
         if (!errors.isEmpty()) {
-            return res.render('folder-form', {
+            return res.render('name-form', {
                 errors: errors.mapped()
             });
         }
@@ -122,7 +122,7 @@ export async function updateFolderGet(req: Request, res: Response) {
             id
         }
     });
-    res.render('folder-form', {
+    res.render('name-form', {
         id,
         name: folder?.name,
         url: `/folders/update/${id ? id : ''}`
@@ -133,6 +133,14 @@ export const updateFolderPost = [
     param('id').isNumeric().toInt(),
     body('name').trim().not().isEmpty().withMessage('Name is required'),
     function (req: Request, res: Response, next: NextFunction) {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.render('name-form', {
+                errors: errors.mapped()
+            });
+        }
+
         const id = Number(req.params.id);
         const name = req.body.name;
 
@@ -151,8 +159,7 @@ export const updateFolderPost = [
 
 export function deleteFolder(req: Request, res: Response, next: NextFunction) {
     const id = Number(req.params.id);
-    console.log(id);
-    
+        
     prismaClient.folder.delete({
         where: {
             id

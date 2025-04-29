@@ -85,6 +85,14 @@ export const updateFilePost = [
     param('id').isNumeric().toInt(),
     body('name').trim().not().isEmpty().withMessage('Name is required'),
     function (req: Request, res: Response, next: NextFunction) {
+        const errors = validationResult(req);
+        
+        if (!errors.isEmpty()) {
+            return res.render('name-form', {
+                errors: errors.mapped()
+            });
+        }
+
         const id = Number(req.params.id);
         const name = req.body.name;
 
